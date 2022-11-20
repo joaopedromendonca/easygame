@@ -1,0 +1,2 @@
+# easygame
+Easiest game ever
