@@ -1,9 +1,12 @@
 from time import sleep
 import arcade
-
+from arcade.experimental.lights import Light, LightLayer
 WALL_SCALING = 0.5
 TRAP_SCALING = 0.2
 SAFE_AREA_LEN = 40
+SCREEN_WIDTH = 600
+SCREEN_HEIGHT = 600
+AMBIENT_COLOR = (10, 10, 10)
 
 
 class Mob():
@@ -81,15 +84,20 @@ class Fase1:
         self.corners = [(50, 550), (100, 500)]
         self.hero_alive = None
 
+        # light
+        self.light_layer = None
+        self.player_light = None
+
     def setup(self):
 
+        self.background_sprite_list = arcade.SpriteList()
         self.wall_list = arcade.SpriteList()
         self.hero_list = arcade.SpriteList()
         self.mobs_list = arcade.SpriteList()
         self.death_count = 0
 
         # setup the mobs
-        mob = Mob(275, 120, 475, 120, 1, 'h')
+        mob = Mob(245, 120, 475, 120, 1, 'h')
         mob2 = Mob(160, 480, 475, 420, 1, 'h')
         mob3 = Mob(164, 180, 164, 448, 1, 'v')
         self.mobs.append(mob)
@@ -105,6 +113,27 @@ class Fase1:
         self.hero_sprite.center_x = 75
         self.hero_sprite.center_y = 110
         self.hero_list.append(self.hero_sprite)
+
+        # setup lights
+        for x in range(54, SCREEN_WIDTH-54, 8):
+            for y in range(104, SCREEN_HEIGHT-100, 8):
+                sprite = arcade.Sprite(
+                    "sprites/tile_0000.png")
+                sprite.center_x = x
+                sprite.center_y = y
+                # sprite.position = x, y
+                self.background_sprite_list.append(sprite)
+
+        self.light_layer = LightLayer(SCREEN_WIDTH, SCREEN_HEIGHT)
+        self.light_layer.set_background_color(arcade.color.BLACK)
+        self.light_radius_player = 30
+
+        # player light
+        radius = 50
+        mode = 'soft'
+        color = arcade.csscolor.WHITE
+        self.player_light = Light(0, 0, radius, color, mode)
+        self.light_layer.add(self.player_light)
 
         # walls
         for x in range(self.corners[0][0], self.corners[0][1], 8):
@@ -179,18 +208,6 @@ class Fase1:
             block.center_y = y
             self.wall_list.append(block)
 
-        # for y in range(148, 460, 8):
-        #     block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
-        #     block.center_x = 190
-        #     block.center_y = y
-        #     self.wall_list.append(block)
-
-        # for x in range(190, 280, 8):
-        #     block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
-        #     block.center_x = x
-        #     block.center_y = 140
-        #     self.wall_list.append(block)
-
         self.wall_list.extend(wall_box(190, 140, 104, 320))
         self.wall_list.extend(wall_box(350, 140, 88, 80))
         self.wall_list.extend(wall_box(350, 260, 88, 200))
@@ -198,16 +215,27 @@ class Fase1:
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.hero_sprite, self.wall_list)
 
+    def set_player_light(self):
+
+        mode = 'soft'
+        color = arcade.csscolor.WHITE
+        self.player_light = Light(
+            self.hero_sprite.center_x, self.hero_sprite.center_y, self.light_radius_player, color, mode)
+        self.light_layer.add(self.player_light)
+
     def update(self):
 
         if self.hero_alive == False:
             self.hero_sprite.center_x = 75
             self.hero_sprite.center_y = 110
             self.hero_alive = True
+
         self.physics_engine.update()
         self.mobs_list.update()
-        self.hero_sprite.center_x += self.hero_sprite.change_x
-        self.hero_sprite.center_y += self.hero_sprite.change_y
+
+        self.player_light.position = self.hero_sprite.position
+        self.hero_sprite.position += (self.hero_sprite.change_x,
+                                      self.hero_sprite.change_y)
 
         if arcade.check_for_collision_with_list(
                 self.hero_sprite, self.mobs_list) != []:
@@ -215,11 +243,20 @@ class Fase1:
             self.death_count += 1
             sleep(0.3)
 
-    def safe_area(self, center_x, center_y, width, height):
-        return arcade.draw_rectangle_filled(
-            center_x, center_y, width, height, arcade.color.TEA_GREEN)
+    def safe_area(self, center_x, center_y, radius=20):
+        mode = 'soft'
+        color = arcade.csscolor.WHITE
+        light = Light(center_x, center_y, radius, color, mode)
+        self.light_layer.add(light)
 
     def draw(self):
+
+        with self.light_layer:
+            self.background_sprite_list.draw()
+            self.hero_list.draw()
+            self.mobs_list.draw()
+
+        self.light_layer.draw(ambient_color=AMBIENT_COLOR)
 
         pos = (self.hero_sprite.center_x, self.hero_sprite.center_y)
         arcade.draw_text(pos, start_x=50, start_y=50,
@@ -228,12 +265,11 @@ class Fase1:
         arcade.draw_text(death_count, start_x=200, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
 
-        self.safe_area(75, 120, 40, 40)
-        self.safe_area(122, 320, 40, 40)
-        self.safe_area(122, 480, 40, 40)
+        # self.safe_area(75, 120)
+        self.safe_area(122, 320)
+        self.safe_area(122, 480)
 
         self.wall_list.draw()
-        self.hero_list.draw()
-        self.mobs_list.draw()
+        # self.hero_list.draw()
         for mob in self.mobs:
             mob.update()

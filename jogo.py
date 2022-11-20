@@ -44,6 +44,11 @@ class GameWindow(arcade.Window):
             hero.change_x = -SPEED
         elif key == arcade.key.RIGHT:
             hero.change_x = SPEED
+        elif key == arcade.key.SPACE:
+            if self.fase1.player_light in self.fase1.light_layer:
+                self.fase1.light_layer.remove(self.fase1.player_light)
+            else:
+                self.fase1.light_layer.add(self.fase1.player_light)
 
     def on_key_release(self, key: int, modifiers: int):
         '''
