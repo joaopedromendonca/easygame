@@ -64,6 +64,13 @@ class GameWindow(arcade.Window):
         # cheat xd
         # elif key == arcade.key.ESCAPE:
         #     self.fase1.win_game = True
+        # lights up
+        elif key == arcade.key.R:
+            self.fase1.ambient_color = (20, 0, 0)
+        elif key == arcade.key.B:
+            self.fase1.ambient_color = (0, 0, 0)
+        elif key == arcade.key.W:
+            self.fase1.ambient_color = (240, 240, 240)
 
 
 def main():

@@ -111,6 +111,7 @@ class Fase1:
         self.death_count = 0
         self.last_time = 0
         self.win_game = False
+        self.ambient_color = (0, 0, 0)
         self.goal = f"Find the {3 - self.keys_found} remaining keys."
         # setup the mobs
         mob = Mob(245, 120, 475, 120, 1, 'h')
@@ -675,7 +676,7 @@ class Fase1:
             self.hero_list.draw()
             self.keys_list.draw()
 
-        self.light_layer.draw(ambient_color=AMBIENT_COLOR)
+        self.light_layer.draw(ambient_color=self.ambient_color)
 
         pos = (self.hero_sprite.center_x, self.hero_sprite.center_y)
         arcade.draw_text(pos, start_x=50, start_y=50,
@@ -686,7 +687,7 @@ class Fase1:
 
         self.goal = f'Find the {3 - self.keys_found} remaining keys.'
         if self.keys_found == 3:
-            self.goal = f'You found the keys, now you can open the gate.'
+            self.goal = f'You found the keys, now open the gate.'
         arcade.draw_text(self.goal, start_x=250, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
 
