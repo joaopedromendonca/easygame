@@ -62,8 +62,8 @@ class GameWindow(arcade.Window):
             if key == arcade.key.SPACE:
                 self.fase1.setup()
         # cheat xd
-        # elif key == arcade.key.ESCAPE:
-        #     self.fase1.win_game = True
+        elif key == arcade.key.ESCAPE:
+            self.fase1.win_game = True
         # lights up
         elif key == arcade.key.R:
             self.fase1.ambient_color = (20, 0, 0)
