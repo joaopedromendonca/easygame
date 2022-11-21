@@ -131,11 +131,13 @@ class Fase1:
         mob16 = Mob(640, 280, 640, 430, 1, 'v')
         mob17 = Mob(640, 120, 640, 250, 1.5, 'v')
         mob18 = Mob(580, 160, 580, 260, 1, 'v')
-        mob19 = Mob(678, 600, 730, 600, 0.5, 'h')
-        mob20 = Mob(678, 560, 730, 560, 0.5, 'h')
-        mob21 = Mob(410, 560, 730, 560, 0.5, 'h')
-        mob22 = Mob(678, 560, 730, 560, 0.5, 'h')
-        mob23 = Mob(678, 560, 730, 560, 0.5, 'h')
+        mob19 = Mob(678, 590, 730, 590, 0.5, 'h')
+        mob19.mob_sprite.scale = 2
+        mob20 = Mob(100, 700, 350, 700, 1, 'h')
+        mob20.mob_sprite.scale = 2.5
+        mob21 = Mob(410, 580, 640, 570, 1.6, 'h')
+        mob22 = Mob(410, 550, 640, 550, 1, 'h')
+        mob23 = Mob(410, 520, 610, 520, 0.6, 'h')
         self.mobs.append(mob)
         self.mobs.append(mob2)
         self.mobs.append(mob3)
@@ -156,6 +158,9 @@ class Fase1:
         self.mobs.append(mob18)
         self.mobs.append(mob19)
         self.mobs.append(mob20)
+        self.mobs.append(mob21)
+        self.mobs.append(mob22)
+        self.mobs.append(mob23)
         self.mobs_list.append(mob.mob_sprite)
         self.mobs_list.append(mob2.mob_sprite)
         self.mobs_list.append(mob3.mob_sprite)
@@ -176,6 +181,9 @@ class Fase1:
         self.mobs_list.append(mob18.mob_sprite)
         self.mobs_list.append(mob19.mob_sprite)
         self.mobs_list.append(mob20.mob_sprite)
+        self.mobs_list.append(mob21.mob_sprite)
+        self.mobs_list.append(mob22.mob_sprite)
+        self.mobs_list.append(mob23.mob_sprite)
 
         # setup the hero
         self.hero_sprite = arcade.Sprite('sprites/hero.png')
@@ -190,6 +198,9 @@ class Fase1:
         key2 = arcade.Sprite('sprites/key.png', 0.3,
                              center_x=580, center_y=120)
         self.keys_list.append(key2)
+        key3 = arcade.Sprite('sprites/key.png', 0.3,
+                             center_x=66, center_y=700)
+        self.keys_list.append(key3)
 
         # key = arcade.Sprite('sprites/key.png', 1, )
 
@@ -298,6 +309,15 @@ class Fase1:
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
         light = Light(675, 464, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
+
+        torch = arcade.Sprite('sprites/torch.png', 0.1,
+                              center_x=400, center_y=735)
+        self.torch_list.append(torch)
+        mode = 'soft'
+        color = arcade.csscolor.LIGHT_YELLOW
+        light = Light(400, 731, 6, color, mode)
         self.lights_off[torch] = light
         # self.light_layer.add(light)
 
@@ -585,6 +605,18 @@ class Fase1:
             block.center_y = y
             self.wall_list.append(block)
 
+        for y in range(732, 746, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 218
+            block.center_y = y
+            self.wall_list.append(block)
+
+        for y in range(652, 668, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 218
+            block.center_y = y
+            self.wall_list.append(block)
+
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.hero_sprite, self.wall_list)
 
@@ -626,6 +658,10 @@ class Fase1:
                     self.keys_list.remove(k)
                     self.keys_found += 1
 
+        if arcade.check_for_collision(self.hero_sprite, self.gate):
+            if self.keys_found == 3:
+                self.win_game = True
+
     def draw(self):
 
         with self.light_layer:
@@ -643,14 +679,11 @@ class Fase1:
         arcade.draw_text(pos, start_x=50, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
         death_count = f'DEATHS: {self.death_count}'
-        arcade.draw_text(death_count, start_x=350, start_y=50,
-                         color=arcade.color.ALABAMA_CRIMSON)
-        rad = self.light_radius_player
-        arcade.draw_text(rad, start_x=150, start_y=50,
+        arcade.draw_text(death_count, start_x=600, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
 
-        keys_left = f'KEYS TO FIND: {3 - self.keys_found}'
-        arcade.draw_text(keys_left, start_x=600, start_y=50,
+        keys_left = f'GOAL: FIND THE {3 - self.keys_found} REMAINING KEYS.'
+        arcade.draw_text(keys_left, start_x=250, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
 
         for mob in self.mobs:
