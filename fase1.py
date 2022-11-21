@@ -106,6 +106,7 @@ class Fase1:
         self.mobs_list = arcade.SpriteList()
         self.torch_list = arcade.SpriteList(use_spatial_hash=True)
         self.keys_list = arcade.SpriteList(use_spatial_hash=True)
+        self.lights_off = {}
         self.keys_found = 0
         self.death_count = 0
         self.last_time = 0
@@ -122,7 +123,19 @@ class Fase1:
         mob9.mob_sprite.scale = 3
         mob10 = Mob(120, 626, 220, 626, 2.5, 'h')
         mob11 = Mob(230, 626, 340, 626, 2.5, 'h')
-        mob12 = Mob()
+        mob12 = Mob(136, 360, 126, 460, 2, 'v')
+        mob13 = Mob(136, 170, 126, 280, 1, 'v')
+        mob13.mob_sprite.scale = 2
+        mob14 = Mob(580, 280, 580, 430, 1.5, 'v')
+        mob15 = Mob(610, 125, 610, 410, 2, 'v')
+        mob16 = Mob(640, 280, 640, 430, 1, 'v')
+        mob17 = Mob(640, 120, 640, 250, 1.5, 'v')
+        mob18 = Mob(580, 160, 580, 260, 1, 'v')
+        mob19 = Mob(678, 600, 730, 600, 0.5, 'h')
+        mob20 = Mob(678, 560, 730, 560, 0.5, 'h')
+        mob21 = Mob(410, 560, 730, 560, 0.5, 'h')
+        mob22 = Mob(678, 560, 730, 560, 0.5, 'h')
+        mob23 = Mob(678, 560, 730, 560, 0.5, 'h')
         self.mobs.append(mob)
         self.mobs.append(mob2)
         self.mobs.append(mob3)
@@ -134,6 +147,15 @@ class Fase1:
         self.mobs.append(mob9)
         self.mobs.append(mob10)
         self.mobs.append(mob11)
+        self.mobs.append(mob12)
+        self.mobs.append(mob13)
+        self.mobs.append(mob14)
+        self.mobs.append(mob15)
+        self.mobs.append(mob16)
+        self.mobs.append(mob17)
+        self.mobs.append(mob18)
+        self.mobs.append(mob19)
+        self.mobs.append(mob20)
         self.mobs_list.append(mob.mob_sprite)
         self.mobs_list.append(mob2.mob_sprite)
         self.mobs_list.append(mob3.mob_sprite)
@@ -145,17 +167,29 @@ class Fase1:
         self.mobs_list.append(mob9.mob_sprite)
         self.mobs_list.append(mob10.mob_sprite)
         self.mobs_list.append(mob11.mob_sprite)
+        self.mobs_list.append(mob12.mob_sprite)
+        self.mobs_list.append(mob13.mob_sprite)
+        self.mobs_list.append(mob14.mob_sprite)
+        self.mobs_list.append(mob15.mob_sprite)
+        self.mobs_list.append(mob16.mob_sprite)
+        self.mobs_list.append(mob17.mob_sprite)
+        self.mobs_list.append(mob18.mob_sprite)
+        self.mobs_list.append(mob19.mob_sprite)
+        self.mobs_list.append(mob20.mob_sprite)
 
         # setup the hero
         self.hero_sprite = arcade.Sprite('sprites/hero.png')
         self.hero_alive = True
-        self.hero_sprite.center_x = 100
-        self.hero_sprite.center_y = 200
+        self.hero_sprite.center_x = 600
+        self.hero_sprite.center_y = 600
         self.hero_list.append(self.hero_sprite)
 
         key1 = arcade.Sprite('sprites/key.png', 0.3,
                              center_x=150, center_y=470)
         self.keys_list.append(key1)
+        key2 = arcade.Sprite('sprites/key.png', 0.3,
+                             center_x=580, center_y=120)
+        self.keys_list.append(key2)
 
         # key = arcade.Sprite('sprites/key.png', 1, )
 
@@ -183,6 +217,7 @@ class Fase1:
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
         light = Light(55, 110, 10, color, mode)
+        self.lights_off[torch] = light
         self.light_layer.add(light)
 
         torch = arcade.Sprite('sprites/torch.png', 0.1,
@@ -190,40 +225,81 @@ class Fase1:
         self.torch_list.append(torch)
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
-        light = Light(160, 310, 10, color, mode)
-        self.light_layer.add(light)
+        light = Light(162, 314, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
 
         torch = arcade.Sprite('sprites/torch.png', 0.1,
-                              center_x=370, center_y=160)
+                              center_x=370, center_y=156)
         self.torch_list.append(torch)
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
-        light = Light(370, 150, 10, color, mode)
-        self.light_layer.add(light)
+        light = Light(370, 150, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
 
         torch = arcade.Sprite('sprites/torch.png', 0.1,
                               center_x=340, center_y=436)
         self.torch_list.append(torch)
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
-        light = Light(340, 436, 10, color, mode)
-        self.light_layer.add(light)
+        light = Light(340, 432, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
 
         torch = arcade.Sprite('sprites/torch.png', 0.1,
                               center_x=480, center_y=340)
         self.torch_list.append(torch)
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
-        light = Light(480, 340, 10, color, mode)
-        self.light_layer.add(light)
+        light = Light(480, 336, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
 
         torch = arcade.Sprite('sprites/torch.png', 0.1,
                               center_x=130, center_y=516)
         self.torch_list.append(torch)
         mode = 'soft'
         color = arcade.csscolor.LIGHT_YELLOW
-        light = Light(130, 516, 10, color, mode)
-        self.light_layer.add(light)
+        light = Light(130, 516, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
+
+        torch = arcade.Sprite('sprites/torch.png', 0.1,
+                              center_x=64, center_y=190)
+        self.torch_list.append(torch)
+        mode = 'soft'
+        color = arcade.csscolor.LIGHT_YELLOW
+        light = Light(64, 184, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
+
+        torch = arcade.Sprite('sprites/torch.png', 0.1,
+                              center_x=506, center_y=436)
+        self.torch_list.append(torch)
+        mode = 'soft'
+        color = arcade.csscolor.LIGHT_YELLOW
+        light = Light(506, 432, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
+
+        torch = arcade.Sprite('sprites/torch.png', 0.1,
+                              center_x=680, center_y=160)
+        self.torch_list.append(torch)
+        mode = 'soft'
+        color = arcade.csscolor.LIGHT_YELLOW
+        light = Light(680, 156, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
+
+        torch = arcade.Sprite('sprites/torch.png', 0.1,
+                              center_x=675, center_y=468)
+        self.torch_list.append(torch)
+        mode = 'soft'
+        color = arcade.csscolor.LIGHT_YELLOW
+        light = Light(675, 464, 6, color, mode)
+        self.lights_off[torch] = light
+        # self.light_layer.add(light)
 
         # player light
         mode = 'soft'
@@ -401,7 +477,7 @@ class Fase1:
             block.center_y = 644
             self.wall_list.append(block)
 
-        for y in range(500, 640, 8):
+        for y in range(500, 710, 8):
             block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
             block.center_x = 394
             block.center_y = y
@@ -413,9 +489,101 @@ class Fase1:
             block.center_y = y
             self.wall_list.append(block)
 
-        # self.wall_list.extend(wall_box(290, 140, 104, 320))
-        # self.wall_list.extend(wall_box(350, 140, 88, 80))
-        # self.wall_list.extend(wall_box(350, 260, 88, 200))
+        for y in range(108, 400, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 554
+            block.center_y = y
+            self.wall_list.append(block)
+
+        for x in range(504, 700, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 452
+            self.wall_list.append(block)
+
+        for y in range(140, 504, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 696
+            block.center_y = y
+            self.wall_list.append(block)
+
+        for x in range(664, 700, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 184
+            self.wall_list.append(block)
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 244
+            self.wall_list.append(block)
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 324
+            self.wall_list.append(block)
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 404
+            self.wall_list.append(block)
+
+        for x in range(402, 620, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 500
+            self.wall_list.append(block)
+
+        for x in range(656, 700, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 500
+            self.wall_list.append(block)
+
+        for x in range(492, 700, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 716
+            self.wall_list.append(block)
+
+        for x in range(394, 460, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 716
+            self.wall_list.append(block)
+
+        for x in range(658, 740, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = x
+            block.center_y = 540
+            self.wall_list.append(block)
+
+        for y in range(548, 680, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 658
+            block.center_y = y
+            self.wall_list.append(block)
+
+        for y in range(620, 724, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 700
+            block.center_y = y
+            self.wall_list.append(block)
+
+        for y in range(596, 712, 8):
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 450
+            block.center_y = y
+            self.wall_list.append(block)
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 500
+            block.center_y = y
+            self.wall_list.append(block)
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 548
+            block.center_y = y
+            self.wall_list.append(block)
+            block = arcade.Sprite('sprites/tile_0031.png', WALL_SCALING)
+            block.center_x = 596
+            block.center_y = y
+            self.wall_list.append(block)
 
         self.physics_engine = arcade.PhysicsEngineSimple(
             self.hero_sprite, self.wall_list)
@@ -447,6 +615,9 @@ class Fase1:
 
         if arcade.check_for_collision_with_list(
                 self.hero_sprite, self.torch_list) != []:
+            for torch in self.torch_list:
+                if arcade.check_for_collision(self.hero_sprite, torch):
+                    self.light_layer.add(self.lights_off[torch])
             self.player_light.radius = self.light_radius_player
 
         if arcade.check_for_collision_with_list(self.hero_sprite, self.keys_list) != []:
