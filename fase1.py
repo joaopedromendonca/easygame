@@ -6,7 +6,7 @@ TRAP_SCALING = 0.2
 SAFE_AREA_LEN = 40
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
-AMBIENT_COLOR = (240, 240, 240)
+AMBIENT_COLOR = (0, 0, 0)
 
 
 class Mob():
@@ -110,6 +110,8 @@ class Fase1:
         self.keys_found = 0
         self.death_count = 0
         self.last_time = 0
+        self.win_game = False
+        self.goal = f"Find the {3 - self.keys_found} remaining keys."
         # setup the mobs
         mob = Mob(245, 120, 475, 120, 1, 'h')
         mob2 = Mob(200, 480, 475, 420, 1, 'h')
@@ -188,8 +190,8 @@ class Fase1:
         # setup the hero
         self.hero_sprite = arcade.Sprite('sprites/hero.png')
         self.hero_alive = True
-        self.hero_sprite.center_x = 600
-        self.hero_sprite.center_y = 600
+        self.hero_sprite.center_x = 75
+        self.hero_sprite.center_y = 100
         self.hero_list.append(self.hero_sprite)
 
         key1 = arcade.Sprite('sprites/key.png', 0.3,
@@ -682,9 +684,25 @@ class Fase1:
         arcade.draw_text(death_count, start_x=600, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
 
-        keys_left = f'GOAL: FIND THE {3 - self.keys_found} REMAINING KEYS.'
-        arcade.draw_text(keys_left, start_x=250, start_y=50,
+        self.goal = f'Find the {3 - self.keys_found} remaining keys.'
+        if self.keys_found == 3:
+            self.goal = f'You found the keys, now you can open the gate.'
+        arcade.draw_text(self.goal, start_x=250, start_y=50,
                          color=arcade.color.ALABAMA_CRIMSON)
 
         for mob in self.mobs:
             mob.update()
+
+        if self.win_game == True:
+            arcade.draw_text(
+                'Congratulations little boi!!',
+                start_x=50, start_y=450, color=arcade.color.RED_DEVIL,
+                font_size=40, bold=True)
+            arcade.draw_text(
+                'You have defeated the darknes!!',
+                start_x=50, start_y=390, color=arcade.color.RED_DEVIL,
+                font_size=34, bold=True)
+            arcade.draw_text(
+                'Press space to play again.',
+                start_x=100, start_y=300, color=arcade.color.RED_DEVIL,
+                font_size=34, bold=True)

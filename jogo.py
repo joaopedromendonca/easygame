@@ -58,6 +58,12 @@ class GameWindow(arcade.Window):
             self.fase1.hero_sprite.change_x = 0
         elif key == arcade.key.RIGHT:
             self.fase1.hero_sprite.change_x = 0
+        elif self.fase1.win_game == True:
+            if key == arcade.key.SPACE:
+                self.fase1.setup()
+        # cheat xd
+        # elif key == arcade.key.ESCAPE:
+        #     self.fase1.win_game = True
 
 
 def main():
